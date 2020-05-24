@@ -7,9 +7,14 @@ Default values can be changed in the mod.json settings:
 
 ```
 "Settings": 	{
-		"LoanInterestMultiplier": 10000,   //Monthly interest cost per loan item
-		"LoanPaybackFee": 10000            //Additional funds subtracted when "selling loan."
+		"LoanInterestMultiplier": 100000,   				//Monthly interest cost per loan item
+		"LoanPaybackFee": 100000           				//Additional funds subtracted when "selling loan.
+		"LoanItemDefTypeAndID": "Item.UpgradeDef.Gear_Loan_Million"	//name of loan item
 		},
 ```
 
-In above example, a player with 5 loans would lose ¢50000/month. On repaying a loan, the player would lose the value of the loan +¢10000.
+Using the above settings, a player with 5 loans would lose ¢500000/month. On repaying a single loan, the player would lose the value of the loan +¢100000.
+
+The `Gear_Loan_Million` item in the Release folder requires MechEngineer, and is not intended to work for users out of the box. Users will need to edit stores to get their own loan items to appear and be purchasable.
+
+Thanks to FrostRaptor (https://github.com/IceRaptor) for the re-use of their code that allows interest payments to be displayed in the finances screen.
