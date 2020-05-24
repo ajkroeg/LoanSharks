@@ -140,11 +140,10 @@ namespace LoanSharks
 		{
 			public static int Postfix(int num, SimGameState __instance, EconomyScale expenditureLevel, bool proRate = false)
 			{
-				
-				//int numdebt = __instance.CompanyStats.GetValue<int>("Item.HeatSinkDef.Gear_HeatSink_Generic_Standard");
-				int ctdebt = __instance.CompanyStats.GetValue<int>("Item.WeaponDef.Weapon_Autocannon_AC10_0-STOCK");
+
+				int ctdebt = __instance.CompanyStats.GetValue<int>("Item.HeatSinkDef.Gear_HeatSink_Generic_Standard");
+				//int ctdebt = __instance.CompanyStats.GetValue<int>("Item.WeaponDef.Weapon_Autocannon_AC10_0-STOCK");
 				int debt = ctdebt * ModInit.Settings.LoanInterestMultiplier;
-				//__instance.CompanyStats.AddStatistic<string>(ModState.InterestFromLoans.ToString(),"0");
 				ModState.InterestFromLoans = debt;
 				ModState.MonthlyExpenditures = debt + num;				
 				return debt + num;
@@ -212,7 +211,7 @@ namespace LoanSharks
 			component.SetData(key, value);
 		}
 		public static List<KeyValuePair<string, int>> GetCurrentKeys(Transform container, SimGameState sgs)
-		{//ALL THE THANKS to FrostRaptor for letting me pirate his code here.
+		{//ALL THE THANKS to FrostRaptor for letting me pirate his code for GetCurrentKeys.
 			List<KeyValuePair<string, int>> list = new List<KeyValuePair<string, int>>();
 			IEnumerator enumerator = container.GetEnumerator();
 			{
