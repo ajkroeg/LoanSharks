@@ -5,9 +5,11 @@ Code to allow for use of negative-valued items (loans) in stores. "Purchasing" a
 
 Default values can be changed in the mod.json settings:
 
-```"Settings": {
+```
+"Settings": 	{
 		"LoanInterestMultiplier": 10000,   //Monthly interest cost per loan item
 		"LoanPaybackFee": 10000            //Additional funds subtracted when "selling loan."
 		},
-  ```
-  In above example, a player with 5 loans would lose ¢50000/month. On repaying a loan, the player would lose the value of the loan +¢10000.
+```
+
+In above example, a player with 5 loans would lose ¢50000/month. On repaying a loan, the player would lose the value of the loan +¢10000.
