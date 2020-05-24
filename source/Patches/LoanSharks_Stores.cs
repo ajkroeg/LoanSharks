@@ -141,7 +141,8 @@ namespace LoanSharks
 			public static int Postfix(int num, SimGameState __instance, EconomyScale expenditureLevel, bool proRate = false)
 			{
 
-				int ctdebt = __instance.CompanyStats.GetValue<int>("Item.HeatSinkDef.Gear_HeatSink_Generic_Standard");
+				//int ctdebt = __instance.CompanyStats.GetValue<int>("Item.ComponentDef.Gear_HeatSink_Generic_Standard");
+				int ctdebt = __instance.CompanyStats.GetValue<int>(ModInit.Settings.LoanItemDefTypeAndID.ToString());
 				//int ctdebt = __instance.CompanyStats.GetValue<int>("Item.WeaponDef.Weapon_Autocannon_AC10_0-STOCK");
 				int debt = ctdebt * ModInit.Settings.LoanInterestMultiplier;
 				ModState.InterestFromLoans = debt;

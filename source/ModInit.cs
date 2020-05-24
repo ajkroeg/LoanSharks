@@ -2,12 +2,13 @@
 using System;
 using System.Reflection;
 using Newtonsoft.Json;
+using BattleTech.UI;
 
 namespace LoanSharks
 {
     public static class ModInit
     {
-        public static LoanSharksSettings Settings;
+        public static LoanSharksSettings Settings = new LoanSharksSettings();
         public const string HarmonyPackage = "us.tbone.LoanSharks";
         public static void Init(string directory, string settingsJSON)
         {
@@ -25,8 +26,9 @@ namespace LoanSharks
     }
     public class LoanSharksSettings
     {
-        public int LoanInterestMultiplier = 10000;
-        public int LoanPaybackFee = 10000;
+        public int LoanInterestMultiplier = 100000;
+        public int LoanPaybackFee = 100000;
+        public string LoanItemDefTypeAndID = "Item.UpgradeDef.Gear_Loan_Million";
     }
     
 }

@@ -10,8 +10,9 @@
     "CustomResourceTypes": [],
 
     "Settings": {
-		"LoanInterestMultiplier": 10000,
-		"LoanPaybackFee": 10000
+		"LoanInterestMultiplier": 100000,
+		"LoanPaybackFee": 100000,
+		"LoanItemDefTypeAndID": "Item.UpgradeDef.Gear_Loan_Million"
 		},
     "Manifest": []
 }
