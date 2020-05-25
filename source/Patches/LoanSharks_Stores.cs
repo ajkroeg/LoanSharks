@@ -144,9 +144,10 @@ namespace LoanSharks
 				//int ctdebt = __instance.CompanyStats.GetValue<int>("Item.ComponentDef.Gear_HeatSink_Generic_Standard");
 				int ctdebt = __instance.CompanyStats.GetValue<int>(ModInit.Settings.LoanItemDefTypeAndID.ToString());
 				//int ctdebt = __instance.CompanyStats.GetValue<int>("Item.WeaponDef.Weapon_Autocannon_AC10_0-STOCK");
+				
 				int debt = ctdebt * ModInit.Settings.LoanInterestMultiplier;
 				ModState.InterestFromLoans = debt;
-				ModState.MonthlyExpenditures = debt + num;				
+				ModState.MonthlyExpenditures = debt + num;
 				return debt + num;
 			}
 			
@@ -157,21 +158,32 @@ namespace LoanSharks
 			public static void Postfix(SimGameState __instance, int timeLapse)
 			{
 				int num = (timeLapse > 0) ? timeLapse : 1;
-				__instance.CompanyStats.AddStatistic<string>("DaysInDebt", ModState.DaysInDebt.ToString());
+				//__instance.CompanyStats.AddStatistic<int>("DaysInDebt", ModState.DaysInDebt);
+				
+				__instance.CompanyStats.AddStatistic<int>("DebtWarningReceived", 0);
 				if (ModState.InterestFromLoans > 0)
 				{
+					ModState.DaysInDebt = __instance.CompanyStats.GetValue<int>("DaysInDebt");
 					ModState.DaysInDebt += num;
+
+					if (__instance.CompanyStats.GetValue<int>("DaysInDebt")<45)
+					{
+						ModState.DebtWarningReceived = 2;
+					}
 				}
 				else
 				{
 					ModState.DaysInDebt = 0;
+					__instance.CompanyStats.Set<int>("DaysInDebt", 0);
 				}
-				__instance.CompanyStats.Set<string>("DaysInDebt", ModState.DaysInDebt.ToString());
+				__instance.CompanyStats.Set<int>("DebtWarningReceived", ModState.DebtWarningReceived);
+				__instance.CompanyStats.Set<int>("DaysInDebt", ModState.DaysInDebt);
+				
 			}
 		}
 
 
-		[HarmonyPatch(typeof(BattleTech.UI.SGCaptainsQuartersStatusScreen), "RefreshData")]
+	[HarmonyPatch(typeof(BattleTech.UI.SGCaptainsQuartersStatusScreen), "RefreshData")]
 		[HarmonyBefore(new string[]
 	{
 		"us.frostraptor.IttyBittyLivingSpace",
