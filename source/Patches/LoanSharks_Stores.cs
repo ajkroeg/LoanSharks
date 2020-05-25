@@ -143,7 +143,6 @@ namespace LoanSharks
 
 				//int ctdebt = __instance.CompanyStats.GetValue<int>("Item.ComponentDef.Gear_HeatSink_Generic_Standard");
 				int ctdebt = __instance.CompanyStats.GetValue<int>(ModInit.Settings.LoanItemDefTypeAndID.ToString());
-				//int ctdebt = __instance.CompanyStats.GetValue<int>("Item.WeaponDef.Weapon_Autocannon_AC10_0-STOCK");
 				
 				int debt = ctdebt * ModInit.Settings.LoanInterestMultiplier;
 				ModState.InterestFromLoans = debt;
@@ -158,7 +157,6 @@ namespace LoanSharks
 			public static void Postfix(SimGameState __instance, int timeLapse)
 			{
 				int num = (timeLapse > 0) ? timeLapse : 1;
-				//__instance.CompanyStats.AddStatistic<int>("DaysInDebt", ModState.DaysInDebt);
 				
 				__instance.CompanyStats.AddStatistic<int>("DebtWarningReceived", 0);
 				if (ModState.InterestFromLoans > 0)
@@ -199,7 +197,6 @@ namespace LoanSharks
 				SimGameState simulation = UnityGameInstance.BattleTechGame.Simulation;
 				bool flag = __instance == null || ___SectionOneExpensesList == null || ___SectionOneExpensesField == null || simulation == null;
 				List<KeyValuePair<string, int>> list = LoanSharks.GetCurrentKeys(___SectionOneExpensesList, ___simState);
-				//List<KeyValuePair<string, int>> list = new List<KeyValuePair<string, int>>();
 				LoanSharks.ClearListLineItems(___SectionOneExpensesList, ___simState);
 				string name = "Interest From Loans";
 				int value = ModState.InterestFromLoans;//___simState.CompanyStats.GetValue<int>("Item.HeatSinkDef.Gear_HeatSink_Generic_Standard");
