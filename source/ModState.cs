@@ -14,8 +14,13 @@ namespace LoanSharks
         public static int DebtWarningReceived = 0;
         public static int MonthlyExpenditures = 0;
 
+        public static string RemoveMechFlag = "FALSE";
+
         public static void Reset()
-        { }
+        {
+        //    RemoveMechID = "F";
+          //  RemoveMechFlag = "F";
+        }
 
     }
 }
