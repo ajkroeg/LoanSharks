@@ -32,7 +32,6 @@ Default values, including name of loan item, can be changed in the mod.json sett
 		"LoanItemDefTypeAndID": "Item.UpgradeDef.Gear_Loan_Million"	//name of loan item
 		"StoreBeforeRemove" : true,					//Are mechs stored/stripped before removing?
 		"NoNegativeStats": false					//Can the stored mech count be negative?
-		
 		},
 ```
 
