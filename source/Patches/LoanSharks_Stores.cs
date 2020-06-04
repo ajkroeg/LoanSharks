@@ -144,6 +144,8 @@ namespace LoanSharks
 				//int ctdebt = __instance.CompanyStats.GetValue<int>("Item.ComponentDef.Gear_HeatSink_Generic_Standard");
 				int ctdebt = __instance.CompanyStats.GetValue<int>(ModInit.Settings.LoanItemDefTypeAndID.ToString());
 				
+				__instance.CompanyStats.Set<int>(ModInit.Settings.FreeMoneyItemDefTypeAndID.ToString(),0);
+				
 				int debt = ctdebt * ModInit.Settings.LoanInterestMultiplier;
 				ModState.InterestFromLoans = debt;
 				ModState.MonthlyExpenditures = debt + num;

@@ -30,6 +30,7 @@ namespace LoanSharks
         public int LoanInterestMultiplier = 100000;
         public int LoanPaybackFee = 100000;
         public string LoanItemDefTypeAndID = "Item.UpgradeDef.Gear_Loan_Million";
+        public string FreeMoneyItemDefTypeAndID = "Item.UpgradeDef.Gear_Pirate_Tribute";
         public bool StoreBeforeRemove = true;
         public bool NoNegativeStats = false;
     }
