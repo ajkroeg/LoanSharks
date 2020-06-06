@@ -48,7 +48,7 @@ namespace LoanSharks
 						ModState.RemoveMechFlag = "FALSE";
 					}
 					else
-					ModState.RemoveMechFlag = action.additionalValues[0];
+					ModState.RemoveMechFlag = action.additionalValues.ElementAtOrDefault(0);
 				}
 				
 				return true;

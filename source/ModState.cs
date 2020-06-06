@@ -19,7 +19,7 @@ namespace LoanSharks
         public static void Reset()
         {
         //    RemoveMechID = "F";
-          //  RemoveMechFlag = "F";
+        //  RemoveMechFlag = "F";
         }
 
     }
