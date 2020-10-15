@@ -39,19 +39,22 @@ namespace LoanSharks
 		[HarmonyPatch(typeof(BattleTech.SimGameState), "ApplyEventAction")]
 		public static class ApplyEventAction_Patch
 		{
-			public static bool Prefix(SimGameResultAction action, object additionalObject)
+			public static void Prefix(SimGameResultAction action, object additionalObject)
 			{
 				
 				{
-					if (action.additionalValues==null)
-					{
-						ModState.RemoveMechFlag = "FALSE";
+                    if (action.Type == SimGameResultAction.ActionType.Mech_AddRoster)
+                    {
+                        if (action.additionalValues == null)
+                        {
+                            ModState.RemoveMechFlag = "FALSE";
+                        }
+                        else
+                            ModState.RemoveMechFlag = action.additionalValues.ElementAtOrDefault(0);
 					}
-					else
-					ModState.RemoveMechFlag = action.additionalValues.ElementAtOrDefault(0);
-				}
+                }
 				
-				return true;
+				return;
 			}
 
 			public static void Postfix(SimGameResultAction action, object additionalObject)
