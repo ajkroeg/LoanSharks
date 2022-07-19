@@ -23,6 +23,7 @@ namespace LoanSharks
 		{
 			public static bool Prefix(Shop __instance, ref int __result, ShopDefItem item, Shop.PurchaseType purchaseType, Shop.ShopType shopType)
 			{
+				if (item == null) return true;
 				DescriptionDef itemDescription = __instance.GetItemDescription(item);
 				if (itemDescription == null)
 				{
