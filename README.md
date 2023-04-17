@@ -1,6 +1,8 @@
 # LoanSharks
  Loans/Debts and Loaner mechs for HBS BT
 
+**v1.1.0.0 and higher require modtek v3 or higher**
+
 This first part of this mod allows for use of negative-valued items (loans) in stores. "Purchasing" a loan will add the C-bill value of the loan to company funds, while "selling" (repaying) a loan will subtract the value of the loan + fee from company funds. In addition, monthly interest on the loans are deducted at the end-of-month finances screen, calculated as a multiplier of the number of loan items in company inventory. In addition, a Company Stat (`DaysInDebt`) is initialized tracking the number of days a player has held loans. This stat is intended for use in firing debt-related events, and is reset to 0 any time there are 0 loans in the company inventory. A stat check on the inventory count of debt items can also be used to control events.
 
 The second part of this mod patches the method `AddMechByID`, itself used by event action `Mech_AddRoster`. The patch allows for an additionalValue to be included in the event .json that <i>removes</i> said mech from the player rather than adding it. If the additionalValue is the string `"RemoveMech"`, a mech matching the action value will be removed. If the additionalValue is null or any other string, that mech will be added (vanilla behavior).:

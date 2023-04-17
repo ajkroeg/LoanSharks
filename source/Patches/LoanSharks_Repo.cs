@@ -1,5 +1,4 @@
-﻿using Harmony;
-using BattleTech;
+﻿using BattleTech;
 using BattleTech.UI;
 using JetBrains.Annotations;
 using System;
@@ -69,15 +68,17 @@ namespace LoanSharks
         public static class AddMechByID_Patch
         {
 			
-            public static bool Prefix(SimGameState __instance, string id, bool active)
-			
+            public static void Prefix(ref bool __runOriginal, SimGameState __instance, string id, bool active)
+
             {
+                if (!__runOriginal) return;
                 //SimGameResultAction.;
                 //ModState.RemoveMechFlag = simGameResultAction.additionalValues[0];
                 //sgra.value
                 if (ModState.RemoveMechFlag != "RemoveMech")
                 { 
-                    return true; 
+                    __runOriginal = true;
+                    return;
                 }
                 else
                 {
@@ -119,8 +120,8 @@ namespace LoanSharks
                             }
                         }
                     }
-					
-                    return false;
+                    __runOriginal = false;
+                    return;
                 }
 				
             }

@@ -1,5 +1,4 @@
-﻿using Harmony;
-using System;
+﻿using System;
 using System.Reflection;
 using Newtonsoft.Json;
 using BattleTech.UI;
@@ -21,8 +20,9 @@ namespace LoanSharks
             {
                 ModInit.Settings = new LoanSharksSettings();
             }
-            var harmony = HarmonyInstance.Create(HarmonyPackage);
-            harmony.PatchAll(Assembly.GetExecutingAssembly());
+            //var harmony = HarmonyInstance.Create(HarmonyPackage);
+            //harmony.PatchAll(Assembly.GetExecutingAssembly());
+            Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), HarmonyPackage);
         }
     }
     public class LoanSharksSettings

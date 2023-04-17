@@ -1,5 +1,4 @@
-﻿using Harmony;
-using BattleTech;
+﻿using BattleTech;
 using BattleTech.UI;
 using BattleTech.UI.TMProWrapper;
 using Localize;
@@ -21,33 +20,42 @@ namespace LoanSharks
 
 		public static class GetPrice_Patch
 		{
-			public static bool Prefix(Shop __instance, ref int __result, ShopDefItem item, Shop.PurchaseType purchaseType, Shop.ShopType shopType)
-			{
-				if (item == null) return true;
+			public static void Prefix(ref bool __runOriginal, Shop __instance, ref int __result, ShopDefItem item, Shop.PurchaseType purchaseType, Shop.ShopType shopType)
+            {
+                if (!__runOriginal) return;
+                if (item == null)
+                {
+                    __runOriginal = true;
+                    return;
+                }
 				DescriptionDef itemDescription = __instance.GetItemDescription(item);
 				if (itemDescription == null)
 				{
 					Debug.LogError("Error :: Shop.GetPrice() GetItemDescription on: " + item.ID + " returned a NULL");
 					__result = 0;
-					return false;
+					__runOriginal = false;
+					return;
 
 				}
-				var this_system = Traverse.Create(__instance).Field("system").GetValue<StarSystem>();
-				float num = (float)itemDescription.Cost;
+				//var this_system = Traverse.Create(__instance).Field("system").GetValue<StarSystem>();
+                var this_system = __instance.system;
+                float num = (float)itemDescription.Cost;
 				float shop = this_system.Discount.Shop;
 				if (num <= 0)
 				{
 					__result = Mathf.RoundToInt(num);
-					return false;
-				}
+					__runOriginal = false;
+                    return;
+                }
 				if (purchaseType != Shop.PurchaseType.Normal)
 				{
 					num *= item.DiscountModifier;
 				}
 				int num2 = Mathf.RoundToInt(num + (num * shop));
 				float num3;
-				var this_shop = Traverse.Create(__instance).Field("Sim").GetValue<SimGameState>();
-				if (shopType != Shop.ShopType.Faction)
+				//var this_shop = Traverse.Create(__instance).Field("Sim").GetValue<SimGameState>();
+                var this_shop = __instance.Sim;
+                if (shopType != Shop.ShopType.Faction)
 				{
 					if (shopType != Shop.ShopType.BlackMarket)
 					{
@@ -63,22 +71,21 @@ namespace LoanSharks
 					num3 = this_shop.GetReputationShopAdjustment(this_system.Def.FactionShopOwnerValue) * num;
 				}
 				__result = Mathf.CeilToInt(Mathf.Clamp((float)num2 + num3, 0f, 1E+09f));
-				return false;
-			}
+				__runOriginal = false;
+                return;
+            }
 		}
 
-
-
-
-
-		[HarmonyPatch(typeof(BattleTech.Shop), "GetAllInventoryShopItems")]
+        [HarmonyPatch(typeof(BattleTech.Shop), "GetAllInventoryShopItems")]
 		public static class GetAllInventoryShopItems_Patch
 		{
-			public static bool Prefix(Shop __instance, ref List<ShopDefItem> __result)
-			{
+			public static void Prefix(ref bool __runOriginal, Shop __instance, ref List<ShopDefItem> __result)
+            {
+                if (!__runOriginal) return;
 				List<ShopDefItem> list = new List<ShopDefItem>();
-				var this_shop = Traverse.Create(__instance).Field("Sim").GetValue<SimGameState>();
-				foreach (ChassisDef chassisDef in this_shop.GetAllInventoryMechDefs(false))
+				//var this_shop = Traverse.Create(__instance).Field("Sim").GetValue<SimGameState>();
+                var this_shop = __instance.Sim;
+                foreach (ChassisDef chassisDef in this_shop.GetAllInventoryMechDefs(false))
 				{
 					ShopDefItem shopDefItem = new ShopDefItem();
 					shopDefItem.ID = chassisDef.Description.Id;
@@ -132,8 +139,9 @@ namespace LoanSharks
 					}
 				}
 				__result = list;
-				return false;
-			}
+				__runOriginal = false;
+                return;
+            }
 		}
 		[HarmonyPatch(typeof(BattleTech.SimGameState), "GetExpenditures")]
 		[HarmonyPatch(new Type[] { typeof(EconomyScale),typeof(bool)})]
@@ -141,8 +149,7 @@ namespace LoanSharks
 		{
 			public static int Postfix(int num, SimGameState __instance, EconomyScale expenditureLevel, bool proRate = false)
 			{
-
-				//int ctdebt = __instance.CompanyStats.GetValue<int>("Item.HeatSinkDef.Gear_HeatSink_Generic_Standard");
+                //int ctdebt = __instance.CompanyStats.GetValue<int>("Item.HeatSinkDef.Gear_HeatSink_Generic_Standard");
 				int ctdebt = __instance.CompanyStats.GetValue<int>(ModInit.Settings.LoanItemDefTypeAndID.ToString());
 				
 				__instance.CompanyStats.Set<int>(ModInit.Settings.FreeMoneyItemDefTypeAndID.ToString(),0);
@@ -183,8 +190,7 @@ namespace LoanSharks
 			}
 		}
 
-
-	[HarmonyPatch(typeof(BattleTech.UI.SGCaptainsQuartersStatusScreen), "RefreshData")]
+        [HarmonyPatch(typeof(BattleTech.UI.SGCaptainsQuartersStatusScreen), "RefreshData")]
 		[HarmonyBefore(new string[]
 	{
 		"us.frostraptor.IttyBittyLivingSpace",
@@ -193,14 +199,12 @@ namespace LoanSharks
 	})]
 		public static class RefreshData_Patch
 		{
-			public static void Postfix(SGCaptainsQuartersStatusScreen __instance, EconomyScale expenditureLevel, bool showMoraleChange,
-				Transform ___SectionOneExpensesList, TextMeshProUGUI ___SectionOneExpensesField, SimGameState ___simState)
-			
-			{
+			public static void Postfix(SGCaptainsQuartersStatusScreen __instance, EconomyScale expenditureLevel, bool showMoraleChange)
+            {
 				SimGameState simulation = UnityGameInstance.BattleTechGame.Simulation;
-				bool flag = __instance == null || ___SectionOneExpensesList == null || ___SectionOneExpensesField == null || simulation == null;
-				List<KeyValuePair<string, int>> list = LoanSharks.GetCurrentKeys(___SectionOneExpensesList, ___simState);
-				LoanSharks.ClearListLineItems(___SectionOneExpensesList, ___simState);
+				bool flag = __instance == null || __instance.SectionOneExpensesList == null || __instance.SectionOneExpensesField == null || simulation == null;
+				List<KeyValuePair<string, int>> list = LoanSharks.GetCurrentKeys(__instance.SectionOneExpensesList, __instance.simState);
+				LoanSharks.ClearListLineItems(__instance.SectionOneExpensesList, __instance.simState);
 				string name = "Interest From Loans";
 				int value = ModState.InterestFromLoans;//___simState.CompanyStats.GetValue<int>("Item.HeatSinkDef.Gear_HeatSink_Generic_Standard");
 				int ongoingUpgradeCosts = 0;
@@ -208,17 +212,15 @@ namespace LoanSharks
 				list.ForEach(delegate (KeyValuePair<string, int> entry)
 				{
 					ongoingUpgradeCosts += entry.Value;
-					LoanSharks.AddListLineItem(___SectionOneExpensesList, ___simState, entry.Key, SimGameState.GetCBillString(entry.Value));
+					LoanSharks.AddListLineItem(__instance.SectionOneExpensesList, __instance.simState, entry.Key, SimGameState.GetCBillString(entry.Value));
 				});
-				___SectionOneExpensesField.SetText(SimGameState.GetCBillString(ongoingUpgradeCosts));
+                __instance.SectionOneExpensesField?.SetText(SimGameState.GetCBillString(ongoingUpgradeCosts));
 			}
-	
-			
-		}
+        }
 
-		private static void AddListLineItem(Transform list, SimGameState ___simState, string key, string value)
+		private static void AddListLineItem(Transform list, SimGameState sim, string key, string value)
 		{
-			GameObject gameObject = ___simState.DataManager.PooledInstantiate("uixPrfPanl_captainsQuarters_quarterlyReportLineItem-element", BattleTechResourceType.UIModulePrefabs, null, null, list);
+			GameObject gameObject = sim.DataManager.PooledInstantiate("uixPrfPanl_captainsQuarters_quarterlyReportLineItem-element", BattleTechResourceType.UIModulePrefabs, null, null, list);
 			SGKeyValueView component = gameObject.GetComponent<SGKeyValueView>();
 			gameObject.transform.localScale = Vector3.one;
 			component.SetData(key, value);
@@ -233,13 +235,15 @@ namespace LoanSharks
 					object obj = enumerator.Current;
 					Transform transform = (Transform)obj;
 					SGKeyValueView component = transform.gameObject.GetComponent<SGKeyValueView>();
-					Traverse traverse = Traverse.Create(component).Field("Key");
-					TextMeshProUGUI textMeshProUGUI = (TextMeshProUGUI)traverse.GetValue();
-					string text = textMeshProUGUI.text;
-					Traverse traverse2 = Traverse.Create(component).Field("Value");
-					TextMeshProUGUI textMeshProUGUI2 = (TextMeshProUGUI)traverse2.GetValue();
-					string text2 = textMeshProUGUI2.text;
-					string text3 = Regex.Replace(text2, "[^\\d]", "");
+					//Traverse traverse = Traverse.Create(component).Field("Key");
+					//TextMeshProUGUI textMeshProUGUI = (TextMeshProUGUI)traverse.GetValue();
+					//string text = textMeshProUGUI.text;
+                    var text = component.Key.text;
+					//Traverse traverse2 = Traverse.Create(component).Field("Value");
+					//TextMeshProUGUI textMeshProUGUI2 = (TextMeshProUGUI)traverse2.GetValue();
+					//string text2 = textMeshProUGUI2.text;
+                    var text2 = component.Value.text;
+                    string text3 = Regex.Replace(text2, "[^\\d]", "");
 					int num = int.Parse(text3);
 					KeyValuePair<string, int> item = new KeyValuePair<string, int>(text, num);
 					list.Add(item);
@@ -247,7 +251,7 @@ namespace LoanSharks
 			}
 			return list;
 		}
-		private static void ClearListLineItems(Transform container, SimGameState ___simState)
+		private static void ClearListLineItems(Transform container, SimGameState sim)
 		{
 			List<GameObject> list = new List<GameObject>();
 			IEnumerator enumerator = container.GetEnumerator();
@@ -272,7 +276,7 @@ namespace LoanSharks
 			while (list.Count > 0)
 			{
 				GameObject gameObject = list[0];
-				___simState.DataManager.PoolGameObject("uixPrfPanl_captainsQuarters_quarterlyReportLineItem-element", gameObject);
+				sim.DataManager.PoolGameObject("uixPrfPanl_captainsQuarters_quarterlyReportLineItem-element", gameObject);
 				list.Remove(gameObject);
 			}
 		}
