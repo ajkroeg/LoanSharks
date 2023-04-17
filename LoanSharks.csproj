@@ -4,7 +4,7 @@
   </Target>
   <PropertyGroup Condition="'$(LoanSharksModPath)' == '' And Exists('$(BattleTechGameDir)\Mods\Core\LoanSharks')">
     <!-- RogueTech -->
-    <LoanSharksModPath>$(BattleTechGameDir)\Mods\Core\CollateralDamageCollateralDamage</LoanSharksModPath>
+    <LoanSharksModPath>$(BattleTechGameDir)\Mods\Core\LoanSharks</LoanSharksModPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(LoanSharksModPath)' == '' And Exists('$(BattleTechGameDir)\Mods\LoanSharks')">
     <!-- flat dir -->
