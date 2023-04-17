@@ -1,8 +1,4 @@
-﻿using BattleTech;
-using System.Collections.Generic;
-using System.Net.NetworkInformation;
-
-namespace LoanSharks
+﻿namespace LoanSharks
 {
 
     public static class ModState

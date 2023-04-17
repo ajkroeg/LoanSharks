@@ -1,16 +1,10 @@
 ﻿using BattleTech;
 using BattleTech.UI;
-using BattleTech.UI.TMProWrapper;
-using Localize;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 using System;
-using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using JetBrains.Annotations;
 
 namespace LoanSharks
 {

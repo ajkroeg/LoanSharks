@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using Newtonsoft.Json;
-using BattleTech.UI;
-using System.Diagnostics.Eventing.Reader;
 
 namespace LoanSharks
 {
